@@ -1,0 +1,3 @@
+{{range .Schema.Tables -}}
+export * from './{{pascal .Name}}.graphql';
+{{end}}

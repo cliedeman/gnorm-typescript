@@ -1,0 +1,98 @@
+# ConnStr is the connection string for the database.  Any environment variables
+# in this string will be expanded, so for example dbname=$MY_DDB will do the
+# right thing.
+# MySQL example:
+# ConnStr = "root:admin@tcp/"
+# Postgres example:
+ConnStr = "dbname=postgres host=127.0.0.1 sslmode=disable user=postgres password=password"
+
+DBType = "postgres"
+
+Schemas = ["public"]
+
+# TODO: add linting
+PostRun = ["../scripts/post-process.sh", "join-monster", "$GNORMFILE"]
+
+NameConversion = "{{camel .}}"
+
+# This will output the files in a subdirectory called "gnorm".  You can change
+# this, but if you do, change the RootPkg definition below to match what the
+# package name should be.
+OutputDir = "./generated"
+
+ExcludeTables = ["knex_migrations", "knex_migrations_lock"]
+
+# PluginDirs = ["./templates/plugin"]
+
+[Params]
+# RootPkg is the package declaration for the output dir. It should match the
+# directory name above. You may change this as appropriate.
+# RootPkg = "generated"
+
+# RootImport = "gitlab.com/stackworx.io/metcon/generated"
+
+[SchemaPaths]
+# "fields.go" = "templates/fields.gotmpl"
+# "db.go" = "templates/db.gotmpl"
+"{{toLower .Schema}}/index.ts" = "templates/table_index.gotmpl"
+"{{toLower .Schema}}/enums/index.ts" = "templates/enum_index.gotmpl"
+
+[TablePaths]
+# "{{toLower .Schema}}/{{toLower .Table}}/{{toLower .Table}}.ts" = "templates/table.gotmpl"
+"{{toLower .Schema}}/{{pascal .Table}}.graphql.ts" = "templates/table.gotmpl"
+
+[EnumPaths]
+# "{{toLower .Schema}}/enum/{{toLower .Enum}}.ts" = "templates/enum.gotmpl"
+"{{toLower .Schema}}/enums/{{pascal .Enum}}.ts" = "templates/enum.gotmpl"
+
+[TypeMap]
+"timestamp with time zone" = "GraphQLNonNull(GraphQLDateTime)"
+"timestamptz" = "GraphQLNonNull(GraphQLDateTime"
+"varchar" = "GraphQLNonNull(GraphQLString"
+"text" = "GraphQLNonNull(GraphQLString)"
+"boolean" = "GraphQLNonNull(boolean)"
+"uuid" = "GraphQLNonNull(GraphQLString)"
+"character varying" = "GraphQLNonNull(GraphQLString)"
+"character" = "GraphQLNonNull(GraphQLString)"
+"smallint" = "GraphQLNonNull(GraphQLInt)"
+"integer" = "GraphQLNonNull(GraphQLInt)"
+"int4" = "GraphQLNonNull(GraphQLInt)"
+"int8" = "GraphQLNonNull(GraphQLInt)"
+"numeric" = "GraphQLNonNull(GraphQLFloat)"
+"bigint" = "GraphQLNonNull(GraphQLInt)"
+# TODO
+"hstore" = "GraphQLNonNull(GraphQLString)"
+# TODO
+"jsonb" = "GraphQLNonNull(GraphQLString)"
+# TODO
+"bytea" = "GraphQLNonNull(GraphQLString)"
+# TODO: real column
+"tstzrange" = "GraphQLNonNull(GraphQLString)"
+# Replace with your own enums
+"book_type" = "GraphQLNonNull(enums.BookType)"
+
+[NullableTypeMap]
+"timestamp with time zone" = "GraphQLDateTime"
+"timestamptz" = "GraphQLDateTime"
+"varchar" = "GraphQLString"
+"text" = "GraphQLString"
+"boolean" = "boolean"
+"uuid" = "GraphQLString"
+"character varying" = "GraphQLString"
+"character" = "GraphQLString"
+"smallint" = "GraphQLInt"
+"integer" = "GraphQLInt"
+"int4" = "GraphQLInt"
+"int8" = "GraphQLInt"
+"numeric" = "GraphQLFloat"
+"bigint" = "GraphQLInt"
+# TODO
+"hstore" = "GraphQLString"
+# TODO
+"jsonb" = "GraphQLString"
+# TODO
+"bytea" = "GraphQLString"
+# TODO: real column
+"tstzrange" = "GraphQLString"
+# Replace with your own enums
+"book_type" = "enums.BookType"

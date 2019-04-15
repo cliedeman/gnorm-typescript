@@ -1,0 +1,9 @@
+import * as BaseModels from './extend';
+{{- $table := .Table.DBName -}}
+{{- $schema := .Table.Schema.DBName -}}
+{{- $colsByName := .Table.ColumnsByName }}
+{{- $nonPKDBNames := .Table.Columns.DBNames.Sorted.Except .Table.PrimaryKeys.DBNames}}
+
+export class {{pascal $table}} extends BaseModels.{{pascal $table}} {
+	// Hand written code here
+} 
